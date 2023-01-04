@@ -83,4 +83,31 @@ class PlayerRepository extends AbstractRepository
 
         return $finalResults;
     }
+
+    /**
+     * @return PlayerStatistics[]
+     */
+    public function getRudestPlayers(): array
+    {
+        $results = $this->createQueryBuilder('player')
+            ->select('player.firstName')
+            ->addSelect('player.lastName')
+            ->addSelect('player.number')
+            ->leftJoin('player.team', 't')
+            ->addSelect('t.name as team')
+            ->leftJoin('player.penalties', 'penalty')
+            ->addSelect('count(penalty) as penalties')
+            ->orderBy('penalties', 'DESC')
+            ->addGroupBy('player')
+            ->having('penalties > 0')
+            ->getQuery()
+            ->getScalarResult();
+
+        $finalResults = [];
+        foreach ($results as $key => $result) {
+            $finalResults[] = new PlayerStatistics($key + 1, ...$result);
+        }
+
+        return $finalResults;
+    }
 }

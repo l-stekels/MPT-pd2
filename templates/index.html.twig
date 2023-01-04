@@ -67,6 +67,35 @@
             {% endfor %}
         </tbody>
     </table>
+    <h1>Rupjākie spēlētāji</h1>
+    <table class="table table-striped table-middle-aligned table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Vieta</th>
+            <th scope="col">Vārds</th>
+            <th scope="col">Uzvārds</th>
+            <th scope="col">Nr</th>
+            <th scope="col">Komanda</th>
+            <th scope="col">Sodu skaits</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for stat in rude_players %}
+                <tr>
+                    <td>{{ stat.place }}</td>
+                    <td>{{ stat.firstName }}</td>
+                    <td>{{ stat.lastName }}</td>
+                    <td class="text-center">{{ stat.number }}</td>
+                    <td>{{ stat.team }}</td>
+                    <td class="text-center">{{ stat.penalties }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Spēlētēju statistika nav pieejama</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block sidebar %}

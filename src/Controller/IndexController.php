@@ -31,6 +31,7 @@ class IndexController extends AbstractController
             [
                 'statistics' => $this->statisticsRepo->getTeamStatistics(),
                 'players' => $this->playerRepo->getPlayerStatistics(10),
+                'rude_players' => $this->playerRepo->getRudestPlayers(),
             ]
         );
     }
