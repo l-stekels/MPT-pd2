@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h1>Pievieno failus</h1>
+    <p>Failiem jābūt JSON formātā</p>
+    {{ form_start(form, {attr: attr|default({})}) }}
+    {{ form_widget(form) }}
+
+    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+        <i class="fa fa-save" aria-hidden="true"></i> Pievienot failus
+    </button>
+    {{ form_end(form) }}
+{% endblock %}
