@@ -1,0 +1,18 @@
+{% block dropzone_widget -%}
+    {%- set attr = attr|merge({ 'data-controller': '', class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
+
+    <div class="dropzone-container" data-controller="dropzone">
+        <input type="file" {{ block('widget_attributes') }} data-dropzone-target="input" />
+
+        <div class="dropzone-placeholder" data-dropzone-target="placeholder">
+            Spied šeit, lai izvēlētos failus, kurus apstrādāt
+        </div>
+
+        <div class="dropzone-preview" data-dropzone-target="preview" style="display: none">
+            <button class="dropzone-preview-button" type="button"
+                    data-dropzone-target="previewClearButton"></button>
+
+            <div data-dropzone-target="previewFilename" class="dropzone-preview-filename"></div>
+        </div>
+    </div>
+{%- endblock %}

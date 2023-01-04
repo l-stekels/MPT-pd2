@@ -243,26 +243,30 @@ class FileService
             }
         }
         \usort($results, static fn (array $a, array $b) => $b['score'] <=> $a['score']);
-        $this->gameRepo->persist(new Statistics(
-            $results[0]['team'],
-            $results[0]['ontime'],
-            $results[0]['overtime'],
-            $results[1]['ontime'],
-            $results[1]['overtime'],
-            $overtime ? 3 : 5,
-            true,
-            $overtime
-        ));
-        $this->gameRepo->persist(new Statistics(
-            $results[1]['team'],
-            $results[1]['ontime'],
-            $results[1]['overtime'],
-            $results[0]['ontime'],
-            $results[0]['overtime'],
-            $overtime ? 2 : 1,
-            false,
-            $overtime,
-        ));
+        $this->gameRepo->persist(
+            new Statistics(
+                $results[0]['team'],
+                $results[0]['ontime'],
+                $results[0]['overtime'],
+                $results[1]['ontime'],
+                $results[1]['overtime'],
+                $overtime ? 3 : 5,
+                true,
+                $overtime
+            )
+        );
+        $this->gameRepo->persist(
+            new Statistics(
+                $results[1]['team'],
+                $results[1]['ontime'],
+                $results[1]['overtime'],
+                $results[0]['ontime'],
+                $results[0]['overtime'],
+                $overtime ? 2 : 1,
+                false,
+                $overtime,
+            )
+        );
         $this->gameRepo->flush();
     }
 }

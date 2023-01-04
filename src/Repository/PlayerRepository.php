@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\DTO\PlayerStatistics;
 use App\Entity\Player;
-use App\Entity\Team;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Stmt\Finally_;
 
 /**
  * @extends AbstractRepository<Player>
@@ -34,9 +34,7 @@ class PlayerRepository extends AbstractRepository
     }
 
     /**
-     * @param string $teamName
-     * @param array  $numbers
-     *
+     * @param int[] $numbers
      * @return Player[]
      */
     public function findByTeamNameAndNumbers(string $teamName, array $numbers): array
@@ -51,5 +49,33 @@ class PlayerRepository extends AbstractRepository
             ])
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return PlayerStatistics[]
+     */
+    public function getPlayerStatistics(): array
+    {
+        $results = $this->createQueryBuilder('player')
+            ->leftJoin('player.goals', 'g')
+            ->leftJoin('player.assists', 'a')
+            ->leftJoin('player.team', 't')
+            ->select('player.firstName')
+            ->addSelect('player.lastName')
+            ->addSelect('player.number')
+            ->addSelect('t.name as team')
+            ->addSelect('count(g) as goals')
+            ->addSelect('count(a) as assists')
+            ->groupBy('player')
+            ->addOrderBy('goals', 'DESC')
+            ->addOrderBy('assists', 'DESC')
+            ->getQuery()
+            ->getScalarResult();
+        $finalResults = [];
+        foreach ($results as $key => $result) {
+            $finalResults[] = new PlayerStatistics($key + 1, ...$result);
+        }
+
+        return $finalResults;
     }
 }
