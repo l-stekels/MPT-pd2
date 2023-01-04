@@ -26,7 +26,7 @@ class Referee
     #[ORM\OneToMany(mappedBy: 'mainReferee', targetEntity: Game::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $mainGames;
 
-    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'assistantReferees')]
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'assistantReferees', cascade: ['persist'])]
     private Collection $assistedGames;
 
     public function __construct(

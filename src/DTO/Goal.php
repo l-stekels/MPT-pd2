@@ -20,7 +20,12 @@ class Goal implements CreatableFromArray
 
     public static function createFromArray(array $data): self
     {
-        $assists = \array_map(static fn ($assist) => $assist, $data['P'] ?? []);
+        $assists = [];
+        if (isset($data['P']['Nr'])) {
+            $assists = [$data['P']];
+        } elseif (is_array($data['P'] ?? null)) {
+            $assists = \array_map(static fn ($assist) => $assist, $data['P'] ?? []);
+        }
 
         return new self(
             $data['Laiks'] ?? null,

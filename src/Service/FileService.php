@@ -18,8 +18,6 @@ use App\Repository\GameRepository;
 use App\Repository\PlayerRepository;
 use App\Repository\RefereeRepository;
 use App\Repository\TeamRepository;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class FileService

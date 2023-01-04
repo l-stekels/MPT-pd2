@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Form\UploadType;
+use App\Repository\PlayerRepository;
 use App\Repository\StatisticsRepository;
 use App\Service\FileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,7 @@ class IndexController extends AbstractController
     public function __construct(
         private readonly FileService $fileService,
         private readonly StatisticsRepository $statisticsRepo,
+        private readonly PlayerRepository $playerRepo,
     ) {
     }
 
@@ -28,6 +30,7 @@ class IndexController extends AbstractController
             'index.html.twig',
             [
                 'statistics' => $this->statisticsRepo->getTeamStatistics(),
+                'players' => $this->playerRepo->getPlayerStatistics(10),
             ]
         );
     }

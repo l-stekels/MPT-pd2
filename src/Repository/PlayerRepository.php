@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\DTO\PlayerStatistics;
 use App\Entity\Player;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use PhpParser\Node\Stmt\Finally_;
 
@@ -35,6 +36,7 @@ class PlayerRepository extends AbstractRepository
 
     /**
      * @param int[] $numbers
+     *
      * @return Player[]
      */
     public function findByTeamNameAndNumbers(string $teamName, array $numbers): array
@@ -54,22 +56,25 @@ class PlayerRepository extends AbstractRepository
     /**
      * @return PlayerStatistics[]
      */
-    public function getPlayerStatistics(): array
+    public function getPlayerStatistics(int $limit = 0): array
     {
-        $results = $this->createQueryBuilder('player')
-            ->leftJoin('player.goals', 'g')
-            ->leftJoin('player.assists', 'a')
-            ->leftJoin('player.team', 't')
+        $qb = $this->createQueryBuilder('player')
             ->select('player.firstName')
             ->addSelect('player.lastName')
             ->addSelect('player.number')
+            ->leftJoin('player.team', 't')
             ->addSelect('t.name as team')
-            ->addSelect('count(g) as goals')
-            ->addSelect('count(a) as assists')
-            ->groupBy('player')
+            ->leftJoin('player.goals', 'g')
+            ->addSelect('count(DISTINCT g) as goals')
+            ->leftJoin('player.assists', 'a')
+            ->addSelect('count(DISTINCT a) as assists')
             ->addOrderBy('goals', 'DESC')
             ->addOrderBy('assists', 'DESC')
-            ->getQuery()
+            ->addGroupBy('player');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        $results = $qb->getQuery()
             ->getScalarResult();
         $finalResults = [];
         foreach ($results as $key => $result) {

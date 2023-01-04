@@ -51,9 +51,9 @@ class Goal
         $this->player = $player;
         $player->addGoal($this);
         $this->assistants = new ArrayCollection($assistants);
-        foreach ($assistants as $assistant) {
-            $assistant->addAssist($this);
-        }
+//        foreach ($assistants as $assistant) {
+//            $assistant->addAssist($this);
+//        }
         $this->minutes = $minutes;
         $this->seconds = $seconds;
         $this->isPenaltyKick = $isPenaltyKick;

@@ -157,6 +157,24 @@ class FileServiceTest extends BaseIntegrationTestCase
 
         $statistics = self::getContainer()->get(PlayerRepository::class)->getPlayerStatistics();
 
-        dd($statistics);
+        self::assertCount(45, $statistics);
+        self::assertSame('Marco', $statistics[0]->firstName);
+        self::assertSame('Verratti', $statistics[0]->lastName);
+        self::assertSame(24, $statistics[0]->number);
+        self::assertSame('Barcelona', $statistics[0]->team);
+        self::assertSame(2, $statistics[0]->goals);
+        self::assertSame(1, $statistics[0]->assists);
+        self::assertSame('Linards', $statistics[4]->firstName);
+        self::assertSame('Grants', $statistics[4]->lastName);
+        self::assertSame(34, $statistics[4]->number);
+        self::assertSame('Skolmeistari', $statistics[4]->team);
+        self::assertSame(1, $statistics[4]->goals);
+        self::assertSame(2, $statistics[4]->assists);
+        self::assertSame('Rolands', $statistics[26]->firstName);
+        self::assertSame('Kompass', $statistics[26]->lastName);
+        self::assertSame(44, $statistics[26]->number);
+        self::assertSame('Skolmeistari', $statistics[26]->team);
+        self::assertSame(0, $statistics[26]->goals);
+        self::assertSame(1, $statistics[26]->assists);
     }
 }
