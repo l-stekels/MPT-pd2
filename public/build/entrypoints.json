@@ -2,14 +2,21 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_symfony_ux-dropzone_d-844879.js",
-        "/build/app.js"
+        "/build/runtime.9a71ee5d.js",
+        "/build/869.584c9355.js",
+        "/build/app.f32edd53.js"
       ],
       "css": [
-        "/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_symfony_ux-dropzone_d-844879.css",
-        "/build/app.css"
+        "/build/869.af638d6a.css",
+        "/build/app.df2cb403.css"
       ]
     }
+  },
+  "integrity": {
+    "/build/runtime.9a71ee5d.js": "sha384-L4SfYhQVswKjKEKxhUFNdD2PfZVf5e+dP5WHQBz8eTm5xp/Qy0Y3Vfw4GKUxNZrZ",
+    "/build/869.584c9355.js": "sha384-OwcUT8sLASCJ4B7gLXlQfCCfnMySAP4Mtxg1p5aTQq4wGAL3HTJMq0qcTmCQap0F",
+    "/build/app.f32edd53.js": "sha384-WdBXuN77MkigiRnmS5C/HoFE2NGkrUpwn5nsVlewYpSTaEeDbUSmSggbJOguwKnx",
+    "/build/869.af638d6a.css": "sha384-v8JR3eGGaAt4v00TVoQw8eXVP3VII6ELEb0ICEiZiWCQAjSLBhTjjvJI3OD6dM8l",
+    "/build/app.df2cb403.css": "sha384-tgaphikaaxFQBhj1px7XAsST5c5iV6fIFwFOHpw7gA8hXgm07vv+RWHX5JN89qcb"
   }
 }

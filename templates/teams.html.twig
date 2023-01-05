@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div data-controller="teams">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist" data-teams-target="tablist">
+            {% for team in teams %}
+                <li role="presentation" class="{{ loop.first ? 'active' : '' }}">
+                    <a href="#{{ team.name }}" aria-controls="{{ team.name }}" role="tab" data-toggle="tab">{{ team.name }}</a>
+                </li>
+            {% else %}
+                <li role="presentation" class="active">
+                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content" data-teams-target="tabcontent">
+            {% for team in teams %}
+                <div role="tabpanel" class="tab-pane {{ loop.first ? 'active' : '' }}" id="{{ team.name }}">
+                    <h3>{{ team.name }}</h3>
+                    {{ playerStats[team.id]|json_encode }}
+                </div>
+            {% else %}
+                <div role="tabpanel" class="tab-pane active" id="home">Nav komandu datu.</div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

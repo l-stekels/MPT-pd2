@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\DTO\PlayerStatistics;
 use App\Entity\Player;
+use App\Entity\Team;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use PhpParser\Node\Stmt\Finally_;
@@ -87,9 +88,9 @@ class PlayerRepository extends AbstractRepository
     /**
      * @return PlayerStatistics[]
      */
-    public function getRudestPlayers(): array
+    public function getRudestPlayers(int $limit = 0): array
     {
-        $results = $this->createQueryBuilder('player')
+        $qb = $this->createQueryBuilder('player')
             ->select('player.firstName')
             ->addSelect('player.lastName')
             ->addSelect('player.number')
@@ -99,8 +100,11 @@ class PlayerRepository extends AbstractRepository
             ->addSelect('count(penalty) as penalties')
             ->orderBy('penalties', 'DESC')
             ->addGroupBy('player')
-            ->having('penalties > 0')
-            ->getQuery()
+            ->having('penalties > 0');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        $results = $qb->getQuery()
             ->getScalarResult();
 
         $finalResults = [];
@@ -109,5 +113,23 @@ class PlayerRepository extends AbstractRepository
         }
 
         return $finalResults;
+    }
+
+    public function getPlayerStatisticsForTeam(Team $team): array
+    {
+        $qb = $this->createQueryBuilder('player')
+            ->select('player.number')
+            ->addSelect('player.firstName')
+            ->addSelect('player.lastName')
+            ->leftJoin('player.team', 'playerTeam')
+            ->leftJoin('playerTeam.games', 'gamesPlayed')
+            ->addSelect('count(gamesPlayed) as games')
+            ->groupBy('player')
+            ->andWhere('player.team = :team')
+            ->setParameter('team', $team);
+
+
+        return $qb->getQuery()
+            ->getScalarResult();
     }
 }
