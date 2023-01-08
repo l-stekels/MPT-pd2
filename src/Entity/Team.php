@@ -30,12 +30,17 @@ class Team
     #[ORM\OneToMany(mappedBy: 'team', targetEntity: Statistics::class, orphanRemoval: true)]
     private Collection $statistics;
 
+    #[ORM\OneToMany(mappedBy: 'team', targetEntity: Goal::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OrderBy(['minutes' => 'ASC', 'seconds' => 'ASC'])]
+    private Collection $goals;
+
     public function __construct(string $name)
     {
         $this->name = $name;
         $this->players = new ArrayCollection();
         $this->games = new ArrayCollection();
         $this->statistics = new ArrayCollection();
+        $this->goals = new ArrayCollection();
     }
 
     public function getId(): int
@@ -91,5 +96,10 @@ class Team
         if (!$this->statistics->contains($statistics)) {
             $this->statistics->add($statistics);
         }
+    }
+
+    public function getGoals(): Collection
+    {
+        return $this->goals;
     }
 }

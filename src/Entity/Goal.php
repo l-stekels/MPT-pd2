@@ -37,6 +37,10 @@ class Goal
     #[ORM\JoinColumn(nullable: false)]
     private Game $game;
 
+    #[ORM\ManyToOne(inversedBy: 'goals')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Team $team;
+
     /**
      * @param Player[] $assistants
      */
@@ -47,6 +51,7 @@ class Goal
         int $seconds,
         bool $isPenaltyKick,
         Game $game,
+        Team $team,
     ) {
         $this->player = $player;
         $player->addGoal($this);
@@ -59,6 +64,7 @@ class Goal
         $this->isPenaltyKick = $isPenaltyKick;
         $this->game = $game;
         $game->addGoal($this);
+        $this->team = $team;
     }
 
     public function getId(): int
@@ -97,5 +103,10 @@ class Goal
     public function getGame(): Game
     {
         return $this->game;
+    }
+
+    public function getTeam(): Team
+    {
+        return $this->team;
     }
 }

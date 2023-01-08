@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\PlayerRepository;
 use App\Repository\TeamRepository;
+use App\Service\PlayerStatisticsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class TeamController extends AbstractController
 {
     public function __construct(
-        private readonly PlayerRepository $playerRepo,
+        private readonly PlayerStatisticsService $playerStatisticsService,
         private readonly TeamRepository $teamRepository,
-    )
-    {
+    ) {
     }
 
     #[Route('/teams', name: 'teams')]
@@ -24,8 +23,10 @@ class TeamController extends AbstractController
     {
         $teams = $this->teamRepository->findAll();
         $statistics = [];
+        $goalies = [];
         foreach ($teams as $team) {
-            $statistics[$team->getId()] = $this->playerRepo->getPlayerStatisticsForTeam($team);
+            $statistics[$team->getId()] = $this->playerStatisticsService->getPlayerStatsForTeam($team);
+            $goalies[$team->getId()] = $this->playerStatisticsService->getGoalieStatsForTeam($team);
         }
 
         return $this->render(
@@ -33,6 +34,7 @@ class TeamController extends AbstractController
             [
                 'teams' => $teams,
                 'playerStats' => $statistics,
+                'goalieStats' => $goalies,
             ]
         );
     }

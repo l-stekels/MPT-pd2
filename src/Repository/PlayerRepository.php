@@ -115,24 +115,33 @@ class PlayerRepository extends AbstractRepository
         return $finalResults;
     }
 
-    public function getPlayerStatisticsForTeam(Team $team): array
+    public function findByTeam(Team $team, array $playerRoles): array
     {
-        $qb = $this->createQueryBuilder('player')
-            ->select('player.number')
-            ->addSelect('player.firstName')
-            ->addSelect('player.lastName')
-            ->leftJoin('player.team', 'playerTeam')
-            ->leftJoin('playerTeam.games', 'gamesPlayed')
-            ->addSelect('count(gamesPlayed) as games')
-            ->groupBy('player')
+        return $this->createQueryBuilder('player')
+            ->addSelect('player')
             ->andWhere('player.team = :team')
-            ->setParameter('team', $team);
-        // Player game time statistics? The amount of time each player has played in main time and overtime
-        /// etc.
-        /// 
-
-
-        return $qb->getQuery()
-            ->getScalarResult();
+            ->setParameter('team', $team)
+            ->leftJoin('player.games', 'playerGames')
+            ->addSelect('playerGames')
+            ->leftJoin('playerGames.teams', 'playerGamesTeams')
+            ->addSelect('playerGamesTeams')
+            ->leftJoin('playerGames.goals', 'gameGoals')
+            ->addSelect('gameGoals')
+            ->leftJoin('player.gamesSubstituted', 'playerGamesSubbed')
+            ->addSelect('playerGamesSubbed')
+            ->leftJoin('player.goals', 'goals')
+            ->addSelect('goals')
+            ->leftJoin('player.assists', 'assists')
+            ->addSelect('assists')
+            ->leftJoin('playerGames.substitutions', 'subs')
+            ->addSelect('subs')
+            ->leftJoin('player.team', 'team')
+            ->addSelect('team')
+            ->andWhere('player.role in (:roles)')
+            ->setParameter('roles', $playerRoles)
+            ->leftJoin('player.penalties', 'penalties')
+            ->addSelect('penalties')
+            ->getQuery()
+            ->getResult();
     }
 }

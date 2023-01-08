@@ -1,29 +1,96 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <div data-controller="teams">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist" data-teams-target="tablist">
-            {% for team in teams %}
-                <li role="presentation" class="{{ loop.first ? 'active' : '' }}">
-                    <a href="#{{ team.name }}" aria-controls="{{ team.name }}" role="tab" data-toggle="tab">{{ team.name }}</a>
-                </li>
-            {% else %}
-                <li role="presentation" class="active">
-                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
-                </li>
-            {% endfor %}
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content" data-teams-target="tabcontent">
-            {% for team in teams %}
-                <div role="tabpanel" class="tab-pane {{ loop.first ? 'active' : '' }}" id="{{ team.name }}">
-                    <h3>{{ team.name }}</h3>
-                    {{ playerStats[team.id]|json_encode }}
-                </div>
-            {% else %}
-                <div role="tabpanel" class="tab-pane active" id="home">Nav komandu datu.</div>
-            {% endfor %}
+<div data-controller="teams">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist" data-teams-target="tablist">
+        {% for team in teams %}
+            <li role="presentation" class="{{ loop.first ? 'active' : '' }}">
+                <a href="#{{ team.name }}" aria-controls="{{ team.name }}" role="tab"
+                   data-toggle="tab">{{ team.name }}</a>
+            </li>
+        {% else %}
+            <li role="presentation" class="active">
+                <a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content" data-teams-target="tabcontent">
+        {% for team in teams %}
+        <div role="tabpanel" class="tab-pane {{ loop.first ? 'active' : '' }}" id="{{ team.name }}">
+            <h3>{{ team.name }}</h3>
+            <br>
+            <h4>Spēlētāji</h4>
+            <table class="table table-striped table-middle-aligned table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nr</th>
+                        <th scope="col">Vārds</th>
+                        <th scope="col">Uzvārds</th>
+                        <th scope="col">Spēlētas spēles</th>
+                        <th scope="col">Spēlētās spēles pamatsastāvā</th>
+                        <th scope="col">Gūtie vārti</th>
+                        <th scope="col">Rezultatīvās piespēles</th>
+                        <th scope="col">Spēlētās minūtes</th>
+                        <th scope="col">Dzeltenās kartītes</th>
+                        <th scope="col">Sarkanās kartītes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for stat in playerStats[team.id] %}
+                    <tr>
+                        <td class="text-center">{{ stat.number }}</td>
+                        <td>{{ stat.firstName }}</td>
+                        <td>{{ stat.lastName }}</td>
+                        <td class="text-center">{{ stat.gamesPlayed }}</td>
+                        <td class="text-center">{{ stat.coreGamesPlayed }}</td>
+                        <td class="text-center">{{ stat.goals }}</td>
+                        <td class="text-center">{{ stat.assists }}</td>
+                        <td class="text-center">{{ stat.minutes ~ ':' ~ stat.seconds }}</td>
+                        <td class="text-center">{{ stat.yellow }}</td>
+                        <td class="text-center">{{ stat.red }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10">Spēlētēju statistika nav pieejama</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <h4>Vārtsargi</h4>
+            <table class="table table-striped table-middle-aligned table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nr</th>
+                        <th scope="col">Vārds</th>
+                        <th scope="col">Uzvārds</th>
+                        <th scope="col">Spēlētas spēles</th>
+                        <th scope="col">Ielaistie vārti</th>
+                        <th scope="col">Vidēji vienā spēlē ielaistie vārti</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for stat in goalieStats[team.id] %}
+                    <tr>
+                        <td class="text-center">{{ stat.number }}</td>
+                        <td>{{ stat.firstName }}</td>
+                        <td>{{ stat.lastName }}</td>
+                        <td class="text-center">{{ stat.gamesPlayed }}</td>
+                        <td class="text-center">{{ stat.goalsAgainst }}</td>
+                        <td class="text-center">{{ stat.averageGoalsAgainst }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10">Spēlētēju statistika nav pieejama</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% else %}
+            <div role="tabpanel" class="tab-pane active" id="home">Nav komandu datu.</div>
+        {% endfor %}
     </div>
+</div>
 {% endblock %}

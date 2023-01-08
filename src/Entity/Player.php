@@ -44,6 +44,12 @@ class Player
     #[ORM\ManyToMany(targetEntity: Goal::class, mappedBy: 'assistants', cascade: ['persist'])]
     private Collection $assists;
 
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'players', cascade: ['persist'])]
+    private Collection $games;
+
+    #[ORM\OneToMany(mappedBy: 'newPlayer', targetEntity: Substitution::class, cascade: ['persist'])]
+    private Collection $gamesSubstituted;
+
     public function __construct(
         string $firstName,
         string $lastName,
@@ -60,6 +66,8 @@ class Player
         $this->penalties = new ArrayCollection();
         $this->goals = new ArrayCollection();
         $this->assists = new ArrayCollection();
+        $this->games = new ArrayCollection();
+        $this->gamesSubstituted = new ArrayCollection();
     }
 
     public function getId(): int
@@ -134,6 +142,33 @@ class Player
     {
         if (!$this->assists->contains($assist)) {
             $this->assists->add($assist);
+        }
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): void
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+        }
+    }
+
+    public function getGamesSubstituted(): Collection
+    {
+        return $this->gamesSubstituted;
+    }
+
+    public function addGameSubstitution(Substitution $substitution): void
+    {
+        if (!$this->gamesSubstituted->contains($substitution)) {
+            $this->gamesSubstituted->add($substitution);
         }
     }
 }

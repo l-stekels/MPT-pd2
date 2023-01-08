@@ -40,7 +40,7 @@ class Game
     #[ORM\OrderBy(['minutes' => 'ASC', 'seconds' => 'ASC'])]
     private Collection $penalties;
 
-    #[ORM\ManyToMany(targetEntity: Player::class)]
+    #[ORM\ManyToMany(targetEntity: Player::class, inversedBy: 'games')]
     private Collection $players;
 
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: Goal::class, cascade: ['persist'], orphanRemoval: true)]
@@ -158,6 +158,7 @@ class Game
     {
         if (!$this->players->contains($player)) {
             $this->players->add($player);
+            $player->addGame($this);
         }
     }
 
@@ -189,5 +190,22 @@ class Game
         if (!$this->substitutions->contains($substitution)) {
             $this->substitutions->add($substitution);
         }
+    }
+
+    /** Total game time in seconds */
+    public function getTotalGameTime(): int
+    {
+
+        $lastGoal = $this->goals->last();
+        // Last goal always exists because the game is never tied but this is for safety
+        if (!$lastGoal instanceof Goal) {
+            return 3600;
+        }
+        // If the last goal was scored in regular time
+        if ($lastGoal->getMinutes() < 60) {
+            return 3600;
+        }
+        // If the last goal was scored in over-time then the game ended after it was scored
+        return $lastGoal->getMinutes() * 60 + $lastGoal->getSeconds();
     }
 }

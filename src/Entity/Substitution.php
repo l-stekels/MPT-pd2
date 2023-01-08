@@ -15,11 +15,11 @@ class Substitution
     #[ORM\Column]
     private int $id;
 
-    #[ORM\ManyToOne(inversedBy: 'substitutions')]
+    #[ORM\ManyToOne()]
     #[ORM\JoinColumn(nullable: false)]
     private Player $playerSubstituted;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'gamesSubstituted')]
     #[ORM\JoinColumn(nullable: false)]
     private Player $newPlayer;
 
@@ -46,6 +46,7 @@ class Substitution
         $this->seconds = $seconds;
         $this->game = $game;
         $game->addSubstitution($this);
+        $this->newPlayer->addGameSubstitution($this);
     }
 
     public function getId(): int

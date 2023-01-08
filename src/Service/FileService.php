@@ -194,7 +194,8 @@ class FileService
                 (int) $time[0],
                 (int) $time[1],
                 $goal->isPenaltyKick,
-                $game
+                $game,
+                $player->getTeam(),
             );
         }
     }
